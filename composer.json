@@ -1,5 +1,5 @@
 {
-    "name": "Aristiklever-R-Sousa/Ecommerce",
+    "name": "aristiklever-r-sousa/ecommerce",
     "authors": [
         {
             "name": "Aristiklever R. Sousa",
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "": "vendor\\hcodebr\\php-classes\\src"
+            "Hcode\\": "vendor\\hcodebr\\php-classes\\src"
         }
     }
 }
