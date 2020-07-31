@@ -8,7 +8,7 @@ Fez-se muito, durante o projeto, o uso de Orientação a Objetos. Isto foi perfe
 
 # Fatures 💻
 - Para gerenciamneto de dependências, utilizamos o [Composer](https://getcomposer.org/download/)no projeto.
-- O template usado no projeto foi de [Almsaeed Studio](https://almsaeedstudio.com)
+- O template da parte do Admin usado no projeto foi de [Almsaeed Studio](https://almsaeedstudio.com), ele é baseado no bootstrap e é de fácil manuseio!
 
 <h2> ♻️ Como faço para contribuir? </h2>
 
