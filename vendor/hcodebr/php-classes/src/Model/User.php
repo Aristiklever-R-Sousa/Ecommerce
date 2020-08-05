@@ -44,7 +44,7 @@
 		public static function verifyLogin($inadmin = true)
 		{
 			if(
-				!isset($_SESSIONS[User::SESSION])
+				!isset($_SESSION[User::SESSION])
 				||
 				!$_SESSION[User::SESSION]
 				||
@@ -53,7 +53,7 @@
 				(bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin
 			) {
 				header("Location: /admin/login");
-				// exit("Não deu!");
+				exit;
 			}
 		}
 
