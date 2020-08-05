@@ -1,1 +1,6 @@
-res/
+*.zip
+*.rar
+*.txt
+res/*.zip
+res/*.rar
+res/*.txt
