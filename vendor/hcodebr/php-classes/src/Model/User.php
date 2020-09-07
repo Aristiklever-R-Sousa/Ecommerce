@@ -278,7 +278,7 @@
 				WHERE iduser = :iduser
 			", array(
 				":password" => $password,
-				":iduser" => $this->getiduser();
+				":iduser" => $this->getiduser()
 			));
 		}
 

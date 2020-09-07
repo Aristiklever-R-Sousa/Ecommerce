@@ -256,13 +256,13 @@ desired effect
 				<ul class="sidebar-menu">
 					<li class="header">HEADER</li>
 					<!-- Optionally, you can add icons to the links -->
-					<li class="active">
+					<li>
 						<a href="/admin/users">
 							<i class="fa fa-users"></i> 
 							<span>Usuários</span>
 						</a>
 					</li>
-					<li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+					<li><a href="/admin/categories"><i class="fa fa-link"></i> <span>Categorias</span></a></li>
 					<li class="treeview">
 						<a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
 							<span class="pull-right-container">
