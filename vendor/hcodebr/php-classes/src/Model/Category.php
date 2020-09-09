@@ -35,6 +35,8 @@
 			);
 
 			$this->setData($results[0]);
+
+			Category::updateFile();
 		}
 
 		public function get($idcategory)
@@ -65,6 +67,31 @@
 			", [
 				":idcategory" => $this->getidcategory()
 			]);
+
+			Category::updateFile();
+		}
+
+		public static function updateFile()
+		{
+
+			$categories = Category::listAll();
+
+			$html = [];
+
+			foreach($categories as $row)
+			{
+				array_push($html, 
+					'<li>'. PHP_EOL.
+					'	<a href="/categories/'.$row['idcategory'].'">'. PHP_EOL.
+					'		'.$row['descategory']. PHP_EOL.
+					'	</a>'. PHP_EOL.
+					'</li>'. PHP_EOL
+				);
+
+			}
+
+			$filename = $_SERVER['DOCUMENT_ROOT'] .DIRECTORY_SEPARATOR. "views" .DIRECTORY_SEPARATOR. "categories-menu.html";
+			file_put_contents($filename, implode('', $html));
 
 		}
 
