@@ -10,11 +10,12 @@
 
 	$app->config('debug', true);
 
-	require_once("site.php");
-	require_once("admin.php");
-	require_once("admin-users.php");
-	require_once("admin-categories.php");
-	require_once("admin-products.php");
+	require_once("res/functions/functions.php");
+	require_once("routes/home.php");
+	require_once("routes/admin.php");
+	require_once("routes/admin-users.php");
+	require_once("routes/admin-categories.php");
+	require_once("routes/admin-products.php");
 
 	$app->run();
 
