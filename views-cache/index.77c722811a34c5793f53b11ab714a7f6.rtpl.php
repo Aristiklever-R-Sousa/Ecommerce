@@ -131,7 +131,7 @@
                             <img src="/res/site/img/brand5.png" alt="">
                             <img src="/res/site/img/brand6.png" alt="">
                             <img src="/res/site/img/brand1.png" alt="">
-                            <img src="/res/site/img/brand2.png" alt="">                            
+                            <img src="/res/site/img/brand2.png" alt="">                     
                         </div>
                     </div>
                 </div>
