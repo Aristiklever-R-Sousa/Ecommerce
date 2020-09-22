@@ -12,6 +12,45 @@
 		const SECRET = "HcodePhp7_Secret";
 		const SECRET_IV = "HcodePhp7_Secret_IV";
 
+		public static function getFromSession()
+		{
+
+			$user = new User();
+
+			if(
+				isset($_SESSION[User::SESSION])
+				&&
+				(int)$_SESSION[User::SESSION]['iduser']
+			)
+				$user->setData($_SESSION[User::SESSION]);
+
+			return $user;
+
+		}
+
+		public static function checkLogin($inadmin = false)
+		{
+
+			if(
+				!isset($_SESSION[User::SESSION])
+				||
+				!$_SESSION[User::SESSION]
+				||
+				!(int)$_SESSION[User::SESSION]["iduser"]
+			)
+				// Não está logado..
+				return false;
+
+			elseif(($inadmin || !$inadmin) && (bool)$_SESSION[User::SESSION]['inadmin'])
+			
+				return true;
+			
+			else
+
+				return false;
+
+		}
+
 		public static function login($login, $password)
 		{
 
@@ -45,23 +84,19 @@
 
 		public static function verifyLogin($inadmin = true)
 		{
-			if(
-				!isset($_SESSION[User::SESSION])
-				||
-				!$_SESSION[User::SESSION]
-				||
-				!(int)$_SESSION[User::SESSION]["iduser"] > 1
-				||
-				(bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin
-			) {
+			if(User::checkLogin($inadmin)) {
+				
 				header("Location: /admin/login");
 				exit("Tente novamente");
+			
 			}
 		}
 
 		public static function logout()
 		{
+
 			$_SESSION[User::SESSION] = NULL;
+		
 		}
 
 		public static function listAll() 
@@ -75,6 +110,24 @@
 				USING(idperson)
 				ORDER BY b.desperson
 			");
+
+		}
+
+		public function get($iduser)
+		{
+			
+			$sql = new Sql();
+
+			$results = $sql->select(
+				"SELECT * FROM tb_users a
+				INNER JOIN tb_persons b
+				USING(idperson)
+				WHERE a.iduser = :iduser", array(
+					":iduser" => $iduser
+				)
+			);
+
+			$this->setData($results[0]);
 
 		}
 
@@ -100,24 +153,6 @@
 			);
 
 			$this->setData($results[0]);
-		}
-
-		public function get($iduser)
-		{
-			
-			$sql = new Sql();
-
-			$results = $sql->select(
-				"SELECT * FROM tb_users a
-				INNER JOIN tb_persons b
-				USING(idperson)
-				WHERE a.iduser = :iduser", array(
-					":iduser" => $iduser
-				)
-			);
-
-			$this->setData($results[0]);
-
 		}
 
 		public function update()
