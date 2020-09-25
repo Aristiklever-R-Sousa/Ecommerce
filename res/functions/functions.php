@@ -21,9 +21,6 @@
 
 		$user = User::getFromSession();
 
-		// var_dump($user->getdesperson());
-		// exit();
-
 		return $user->getdesperson();
 
 	}
