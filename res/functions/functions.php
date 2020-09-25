@@ -5,6 +5,8 @@
 	function formatPrice($vlprice)
 	{
 
+		if(!$vlprice) $vlprice = 0;
+
 		return number_format((float)$vlprice, 2, ",", ".");
 
 	}

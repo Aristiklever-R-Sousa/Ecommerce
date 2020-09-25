@@ -212,7 +212,7 @@
 
 		}
 
-		public static function getForgot($email)
+		public static function getForgot($email, $inadmin = true)
 		{
 
 			$sql = new Sql();
@@ -251,9 +251,11 @@
 						pack("a16", User::SECRET_IV)
 					);
 
-					$encrypt = base64_encode($encrypt);
+					$code = base64_encode($encrypt);
 
-					$link = "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$encrypt";
+					$link = $inadmin
+							? "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$code"
+							: "http://www.hcodecommerce.com.br/forgot/reset?code=$code";
 
 					$mailer = new Mailer(
 						$data["desemail"], $data["desperson"],
@@ -270,6 +272,8 @@
 				}
 
 			}
+
+			return [];
 
 		}
 
