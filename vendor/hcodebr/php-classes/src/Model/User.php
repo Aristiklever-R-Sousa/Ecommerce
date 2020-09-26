@@ -13,6 +13,7 @@
 		const SECRET_IV = "HcodePhp7_Secret_IV";
 		const ERROR = "UserError";
 		const ERROR_REGISTER = "UserErrorResgister";
+		const SUCCESS = "UserSuccess"
 
 		public static function getFromSession()
 		{
@@ -339,6 +340,32 @@
 				":password" => $password,
 				":iduser" => $this->getiduser()
 			));
+		}
+
+		public static function setSuccess($msg)
+		{
+
+			$_SESSION[User::SUCCESS] = $msg;
+
+		}
+
+		public static function getSucess()
+		{
+
+			$msg = isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]
+					? $_SESSION[User::SUCCESS] : "";
+
+			User::clearSuccess();
+
+			return $msg;
+
+		}
+
+		public static function clearSuccess()
+		{
+
+			$_SESSION[User::SUCCESS] = NULL;
+
 		}
 
 		public static function setError($msg)

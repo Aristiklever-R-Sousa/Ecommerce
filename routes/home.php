@@ -309,4 +309,75 @@
 
 	});
 
+	$app->get('/profile', function() {
+
+		User::verifyLogin(false);
+
+		$user = User::getFromSession();
+
+		$page = new Page();
+
+		$page->setTpl("profile", [
+			'user' => $user->getData(),
+			'profileMsg' => User::getSuccess(,
+			'profileError' => User::getError()
+		]);
+
+	});
+
+	$app->post('/profile', function() {
+
+		User::verifyLogin();
+
+		if(!isset($_POST['desperson']) || $_POST['desperson'] == '') {
+
+			User::setError("Fill in your name.");
+			header('Location: /profile');
+			exit;
+
+		}
+
+		if(!isset($_POST['desemail']) || $_POST['desemail'] == '') {
+
+			User::setError("Fill in your email.");
+			header('Location: /profile');
+			exit;
+
+		}
+
+		$user = getFromSession();
+
+		if ($_POST['desemail'] !== $user->getdesemail()) {
+			
+			if (User::checkLoginExist($_POST['desemail'])) {
+			
+				User::setError("This email address is already in use. Enter another.");
+				header('Location: /login');
+				exit;
+			
+			}
+			
+		} else {
+
+			User::setError("You are already using this email address. Enter another.");
+			header('Location: /login');
+			exit;
+
+		}
+
+		$_POST['inadmin'] = $user->getinadmin();
+		$_POST['password'] = $user->getdespassword();
+		$_POST['deslogin'] = $_POST['desemail'];
+
+		$user->setData($_POST);
+
+		$user->update();
+
+		User::setSuccess("Data updated with success.");
+
+		header('Location: /profile');
+		exit();
+
+	});
+
 ?>
