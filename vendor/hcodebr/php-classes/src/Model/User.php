@@ -13,7 +13,7 @@
 		const SECRET_IV = "HcodePhp7_Secret_IV";
 		const ERROR = "UserError";
 		const ERROR_REGISTER = "UserErrorResgister";
-		const SUCCESS = "UserSuccess"
+		const SUCCESS = "UserSuccess";
 
 		public static function getFromSession()
 		{
