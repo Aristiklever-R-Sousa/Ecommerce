@@ -349,7 +349,7 @@
 
 		}
 
-		public static function getSucess()
+		public static function getSuccess()
 		{
 
 			$msg = isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]
@@ -443,6 +443,33 @@
 			return password_hash($password, PASSWORD_DEFAULT, [
 				'cost' => 12
 			]);
+
+		}
+
+		public function getOrders()
+		{
+
+			$sql = new Sql();
+
+			$results = $sql->select("
+				SELECT *
+				FROM tb_orders o
+				INNER JOIN tb_ordersstatus os
+					ON o.idstatus = os.idstatus
+				INNER JOIN tb_carts c
+					ON o.idcart = c.idcart
+				INNER JOIN tb_users u
+					ON o.iduser = u.iduser
+				INNER JOIN tb_addresses a
+					ON o.idaddress = a.idaddress
+				INNER JOIN tb_persons p
+					ON u.idperson = p.idperson
+				WHERE o.iduser = :iduser
+			", [
+				':iduser' => $this->getiduser()
+			]);
+
+			return $results;
 
 		}
 

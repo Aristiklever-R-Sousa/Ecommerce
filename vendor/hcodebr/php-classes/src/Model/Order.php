@@ -52,7 +52,7 @@
 					ON u.idperson = p.idperson
 				WHERE o.idorder = :idorder
 			", [
-				'idorder' => $idorder
+				':idorder' => $idorder
 			]);
 
 			if(count($results))
