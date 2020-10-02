@@ -75,7 +75,8 @@
 		exit();
 
 	});
-$app->get("/profile/orders", function() {
+
+	$app->get("/profile/orders", function() {
 
 		User::verifyLogin(false);
 

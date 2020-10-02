@@ -292,6 +292,11 @@
 
 				return $result;
 
+			} elseif(!$nrzipcode) {
+				$this->setvlfreight(0);
+				$this->setnrdays(0);
+				$this->setdeszipcode($nrzipcode);
+				$this->save();
 			}
 
 		}
