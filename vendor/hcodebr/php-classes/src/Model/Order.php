@@ -64,29 +64,6 @@
 			
 		}
 
-		public static function listAll()
-		{
-
-			$sql = new Sql();
-
-			return $sql->select("
-				SELECT *
-				FROM tb_orders o
-				INNER JOIN tb_ordersstatus os
-					ON o.idstatus = os.idstatus
-				INNER JOIN tb_carts c
-					ON o.idcart = c.idcart
-				INNER JOIN tb_users u
-					ON o.iduser = u.iduser
-				INNER JOIN tb_addresses a
-					ON o.idaddress = a.idaddress
-				INNER JOIN tb_persons p
-					ON u.idperson = p.idperson
-				ORDER BY o.dtregister DESC
-			");
-
-		}
-
 		public function delete()
 		{
 

@@ -116,20 +116,6 @@
 		
 		}
 
-		public static function listAll() 
-		{
-			$sql = new Sql();
-
-			return $sql->select("
-				SELECT *
-				FROM tb_users a
-				INNER JOIN tb_persons b
-				USING(idperson)
-				ORDER BY b.desperson
-			");
-
-		}
-
 		public function get($iduser)
 		{
 			
@@ -473,68 +459,6 @@
 			return $results;
 
 		}
-
-		public static function getPage($page = 1, $itemsPerPage = 10)
-		{
-
-			$start = ($page - 1) * $itemsPerPage ;
-
-			$sql = new Sql();
-
-			$results = $sql->select("
-				SELECT SQL_CALC_FOUND_ROWS *
-				FROM tb_users u
-				INNER JOIN tb_persons p
-					ON u.idperson = p.idperson
-				ORDER BY p.desperson
-				LIMIT $start, $itemsPerPage;
-			");
-
-			$resultTotal = $sql->select("
-				SELECT FOUND_ROWS() AS nrtotal;
-			");
-
-			return [
-				'data' => $results,
-				'totalRows' => $resultTotal[0]['nrtotal'],
-				'pages' => ceil($resultTotal[0]['nrtotal'] / $itemsPerPage)
-			];
-
-		}
-
-		public static function getPageSearch($search, $page = 1, $itemsPerPage = 10)
-		{
-
-			$start = ($page - 1) * $itemsPerPage ;
-
-			$sql = new Sql();
-
-			$results = $sql->select("
-				SELECT SQL_CALC_FOUND_ROWS *
-				FROM tb_users u
-				INNER JOIN tb_persons p
-					ON u.idperson = p.idperson
-				WHERE p.desperson LIKE :search
-					OR p.desemail = :search
-					OR u.deslogin LIKE :search
-				ORDER BY p.desperson
-				LIMIT $start, $itemsPerPage;
-			", [
-				':search' => '%'.$search.'%'
-			]);
-
-			$resultTotal = $sql->select("
-				SELECT FOUND_ROWS() AS nrtotal;
-			");
-
-			return [
-				'data' => $results,
-				'totalRows' => $resultTotal[0]['nrtotal'],
-				'pages' => ceil($resultTotal[0]['nrtotal'] / $itemsPerPage)
-			];
-
-		}
-
 
 	}
 
