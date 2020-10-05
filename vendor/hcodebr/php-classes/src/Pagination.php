@@ -91,8 +91,8 @@
 						INNER JOIN tb_persons p
 							ON u.idperson = p.idperson
 						WHERE p.desperson LIKE :search
-							OR p.desemail = :search
-							OR u.deslogin LIKE :search
+						OR p.desemail = :search
+						OR u.deslogin LIKE :search
 						ORDER BY p.desperson
 						LIMIT $start, $itemsPerPage;
 					", [
@@ -138,10 +138,12 @@
 							ON o.idaddress = a.idaddress
 						INNER JOIN tb_persons p
 							ON u.idperson = p.idperson
-						WHERE 
+						WHERE o.idorder = :id
+						OR p.desperson LIKE :search
 						ORDER BY o.dtregister DESC
 						LIMIT $start, $itemsPerPage;
 					", [
+						':id' => $search,
 						':search' => '%'.$search.'%'
 					]);
 				break;
