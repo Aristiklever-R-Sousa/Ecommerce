@@ -323,7 +323,7 @@
 				SET despassword = :password
 				WHERE iduser = :iduser
 			", array(
-				":password" => $password,
+				":password" => User::getPasswordHash($password),
 				":iduser" => $this->getiduser()
 			));
 		}
