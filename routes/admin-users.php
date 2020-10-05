@@ -1,6 +1,7 @@
 <?php 
 
 	use \Hcode\Model\User;
+	use \Hcode\Pagination;
 	use \Hcode\PageAdmin;
 
 	$app->get('/admin/users', function() {
@@ -10,7 +11,10 @@
 		$search = isset($_GET['search']) ? $_GET['search'] : '';
 		$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-		$pagination = $search ? User::getPageSearch($search, $page) : User::getPage($page);
+		$pagination = $search ?
+						Pagination::getPageSearch('users', $search, $page)
+						:
+						Pagination::getPage('users', $page);
 
 		$pages = [];
 

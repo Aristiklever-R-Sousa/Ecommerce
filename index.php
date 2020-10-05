@@ -16,11 +16,11 @@
 	require_once("routes/site-profile.php");
 	require_once("routes/site-checkout.php");
 	require_once("routes/site-logs.php");
-	// require_once("routes/admin.php");
-	// require_once("routes/admin-users.php");
-	// require_once("routes/admin-categories.php");
-	// require_once("routes/admin-products.php");
-	// require_once("routes/admin-orders.php");
+	require_once("routes/admin.php");
+	require_once("routes/admin-users.php");
+	require_once("routes/admin-categories.php");
+	require_once("routes/admin-products.php");
+	require_once("routes/admin-orders.php");
 
 	$app->run();
 
