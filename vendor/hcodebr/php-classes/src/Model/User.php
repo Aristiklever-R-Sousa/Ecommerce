@@ -81,13 +81,14 @@
 				FROM tb_users a
 				INNER JOIN tb_persons b
 					ON a.idperson = b.idperson
-				WHERE a.deslogin = :LOGIN", array(
+				WHERE a.deslogin = :LOGIN
+				OR b.desemail = :LOGIN", array(
 				":LOGIN" => $login
 			));
 
 			if (count($results) === 0)
 			{
-				throw new \Exception("User unexistent or password invalid!");
+				throw new \Exception("1User unexistent or password invalid!");
 			}
 
 			$data = $results[0];
