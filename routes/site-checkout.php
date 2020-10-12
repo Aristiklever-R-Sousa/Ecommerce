@@ -1,6 +1,7 @@
 <?php
 	
 	use \Hcode\Page;
+	use \Hcode\Message;
 	use \Hcode\Model\User;
 	use \Hcode\Model\Address;
 	use \Hcode\Model\Cart;
@@ -44,7 +45,7 @@
 			'cart' => $cart->getData(),
 			'address' => $address->getData(),
 			'products'=> $cart->getProducts(),
-			'error' => Address::getMsgError()
+			'error' => Message::getError('Address')
 		]);
 
 	});
@@ -56,7 +57,7 @@
 
 		if(!(isset($_POST['deszipcode']) && $_POST['deszipcode'])) {
 
-			Address::setMsgError("Enter the zipcode.");
+			Message::setError("Enter the zipcode.", 'Address');
 			header("Location: /checkout");
 			exit;
 
@@ -64,7 +65,7 @@
 
 		if(!(isset($_POST['desaddress']) && $_POST['desaddress'])) {
 
-			Address::setMsgError("Enter the address.");
+			Message::setError("Enter the address.", 'Address');
 			header("Location: /checkout");
 			exit;
 
@@ -72,7 +73,7 @@
 
 		if(!(isset($_POST['desdistrict']) && $_POST['desdistrict'])) {
 
-			Address::setMsgError("Enter the district.");
+			Message::setError("Enter the district.", 'Address');
 			header("Location: /checkout");
 			exit;
 
@@ -80,7 +81,7 @@
 
 		if(!(isset($_POST['descity']) && $_POST['descity'])) {
 
-			Address::setMsgError("Enter the city.");
+			Message::setError("Enter the city.", 'Address');
 			header("Location: /checkout");
 			exit;
 
@@ -88,7 +89,7 @@
 
 		if(!(isset($_POST['desstate']) && $_POST['desstate'])) {
 
-			Address::setMsgError("Enter the state.");
+			Message::setError("Enter the state.", 'Address');
 			header("Location: /checkout");
 			exit;
 
@@ -96,7 +97,7 @@
 
 		if(!(isset($_POST['descountry']) && $_POST['descountry'])) {
 
-			Address::setMsgError("Enter the country.");
+			Message::setError("Enter the country.", 'Address');
 			header("Location: /checkout");
 			exit;
 
@@ -131,14 +132,14 @@
 		switch ((int)$_POST['payment-method']) {
 			case 1:
 				header("Location: /order/".$order->getidorder()."/pagseguro");
-				break;
+			break;
 			
-			default:
+			case 2:
 				header("Location: /order/".$order->getidorder()."/paypal");
-				break;
+			break;
 		}
 
-		exit();
+		exit;
 
 	});
 

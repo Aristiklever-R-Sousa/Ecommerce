@@ -2,14 +2,12 @@
 
 	namespace Hcode\Model;
 
-	use \Hcode\DB\Sql;
 	use \Hcode\Model;
+	use \Hcode\Message;
+	use \Hcode\DB\Sql;
 	use \Hcode\Model\User;
 
 	class Cart extends Model{
-
-		const SESSION = "Cart";
-		const SESSION_ERROR = "CartError";
 
 		public static function formatValueToDecimal($value):float
 		{
@@ -279,10 +277,14 @@
 
 				$result = $xml->Servicos->cServico;
 
-				if ($result->MsgError != '')
-					Cart::setMsgError($result->MsgError);
+				if ($result->MsgErro != '')
+
+					Message::setError($result->MsgErro, 'Cart');
+
 				else
-					Cart::clearMsgError();
+					
+					Message::clearError('Cart');
+					
 
 				$this->setnrdays($result->PrazoEntrega);
 				$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
@@ -319,31 +321,6 @@
 			$this->getCalculateTotal();
 
 			return parent::getData();
-
-		}
-
-		public static function setMsgError($msg)
-		{
-
-			$_SESSION[Cart::SESSION_ERROR] = $msg;
-
-		}
-
-		public static function getMsgError()
-		{
-
-			$msg = isset($_SESSION[Cart::SESSION_ERROR]) ? $_SESSION[Cart::SESSION_ERROR] : "";
-
-			Cart::clearMsgError();
-
-			return $msg;
-
-		}
-
-		public static function clearMsgError()
-		{
-
-			$_SESSION[Cart::SESSION_ERROR] = NULL;
 
 		}
 

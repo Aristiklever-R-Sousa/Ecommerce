@@ -1,16 +1,19 @@
 <?php
 	
 	use \Hcode\Page;
+	use \Hcode\Message;
 	use \Hcode\Model\User;
+	use \Hcode\Model\Cart;
 
 	$app->get('/login', function() {
 
 		$page = new Page();
 
 		$page->setTpl('login',[
-			'error' => User::getError(),
-			'errorRegister' => User::getErrorRegister(),
-			'registerValues' => isset($_SESSION['registerValues']) ?
+			'error' => Message::getError(),
+			'errorRegister' => Message::getErrorRegister(),
+			'registerValues' => isset($_SESSION['registerValues'])
+								?
 								$_SESSION['registerValues'] :
 								['email'=> '', 'name'=> '', 'phone'=> '']
 		]);
@@ -23,12 +26,21 @@
 
 			User::login($_POST['login'], $_POST['password']);
 
-		} catch(Exception $e) {
-			User::setError($e->getMessage());
-		}
+			$cart = Cart::getFromSession();
 
-		header('Location: /checkout');
-		exit();
+			$cart->getData();
+
+			$route = $cart->getvlsubtotal() ? "/checkout" : "/";
+			
+			header('Location: '.$route);
+			exit;
+
+		} catch(Exception $e) {
+
+			Message::setError($e->getMessage());
+			header('Location: /login');
+			exit;
+		}
 		
 	});
 
@@ -47,7 +59,7 @@
 
 		if(!isset($_POST['name']) || $_POST['name'] == '') {
 
-			User::setErrorRegister("Fill in your name.");
+			Message::setErrorRegister("Fill in your name.");
 			header('Location: /login');
 			exit;
 
@@ -55,7 +67,7 @@
 
 		if(!isset($_POST['email']) || $_POST['email'] == '') {
 
-			User::setErrorRegister("Fill in your email.");
+			Message::setErrorRegister("Fill in your email.");
 			header('Location: /login');
 			exit;
 
@@ -63,7 +75,7 @@
 
 		if (User::checkLoginExist($_POST['email'])) {
 			
-			User::setErrorRegister("This email is already in use. Enter another.");
+			Message::setErrorRegister("This email is already in use. Enter another.");
 			header('Location: /login');
 			exit;
 			
@@ -71,7 +83,7 @@
 
 		if(!isset($_POST['password']) || $_POST['password'] == '') {
 
-			User::setErrorRegister("Fill in your password.");
+			Message::setErrorRegister("Fill in your password.");
 			header('Location: /login');
 			exit;
 
@@ -92,9 +104,19 @@
 
 		User::login($_POST['email'], $_POST['password']);
 
-		header('Location: /checkout');
+		$cart = Cart::getFromSession();
 
-		$_SESSION['registerValues'] = ['email'=> '', 'name'=> '', 'phone'=> ''];
+		$cart->getData();
+
+		$route = $cart->getvlsubtotal() ? "/checkout" : "/";
+			
+		header('Location: '.$route);
+
+		$_SESSION['registerValues'] = [
+			'email'=> '', 
+			'name'=> '', 
+			'phone'=> ''
+		];
 		exit;
 
 	});

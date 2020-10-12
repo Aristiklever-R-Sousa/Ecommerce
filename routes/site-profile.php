@@ -1,6 +1,7 @@
 <?php
 	
 	use \Hcode\Page;
+	use \Hcode\Message;
 	use \Hcode\Model\User;
 	use \Hcode\Model\Order;
 	use \Hcode\Model\Cart;
@@ -15,19 +16,19 @@
 
 		$page->setTpl("profile", [
 			'user' => $user->getData(),
-			'profileMsg' => User::getSuccess(),
-			'profileError' => User::getError()
+			'profileMsg' => Message::getSuccess(),
+			'profileError' => Message::getError()
 		]);
 
 	});
 
 	$app->post('/profile', function() {
 
-		User::verifyLogin();
+		User::verifyLogin(false);
 
 		if(!isset($_POST['desperson']) || $_POST['desperson'] == '') {
 
-			User::setError("Fill in your name.");
+			Message::setError("Fill in your name.");
 			header('Location: /profile');
 			exit;
 
@@ -35,31 +36,25 @@
 
 		if(!isset($_POST['desemail']) || $_POST['desemail'] == '') {
 
-			User::setError("Fill in your email.");
+			Message::setError("Fill in your email.");
 			header('Location: /profile');
 			exit;
 
 		}
 
-		$user = getFromSession();
+		$user = User::getFromSession();
 
 		if ($_POST['desemail'] !== $user->getdesemail()) {
 			
 			if (User::checkLoginExist($_POST['desemail'])) {
 			
-				User::setError("This email address is already in use. Enter another.");
-				header('Location: /login');
+				Message::setError("This email address is already in use. Enter another.");
+				header('Location: /profile');
 				exit;
 			
 			}
 			
-		} else {
-
-			User::setError("You are already using this email address. Enter another.");
-			header('Location: /login');
-			exit;
-
-		}
+		} 
 
 		$_POST['inadmin'] = $user->getinadmin();
 		$_POST['password'] = $user->getdespassword();
@@ -69,10 +64,10 @@
 
 		$user->update();
 
-		User::setSuccess("Data updated with success.");
+		Message::setSuccess("Data updated with success.");
 
 		header('Location: /profile');
-		exit();
+		exit;
 
 	});
 
@@ -121,8 +116,8 @@
 		$page = new Page();
 
 		$page->setTpl("profile-change-password", [
-			'changePassError' => User::getError(),
-			'changePassSuccess' => USer::getSuccess()
+			'changePassError' => Message::getError(),
+			'changePassSuccess' => Message::getSuccess()
 		]);
 
 	});
@@ -133,7 +128,7 @@
 
 		if(!isset($_POST['current_pass']) || $_POST['current_pass'] == '') {
 
-			User::setError("Fill in your current password.");
+			Message::setError("Fill in your current password.");
 			header('Location: /profile/change-password');
 			exit;
 
@@ -142,7 +137,7 @@
 
 		if(!isset($_POST['new_pass']) || $_POST['new_pass'] == '') {
 
-			User::setError("Fill in your new password.");
+			Message::setError("Fill in your new password.");
 			header('Location: /profile/change-password');
 			exit;
 
@@ -150,7 +145,7 @@
 
 		if(!isset($_POST['new_pass_confirm']) || $_POST['new_pass_confirm'] == '') {
 
-			User::setError("Fill in the confirmation of the new password.");
+			Message::setError("Fill in the confirmation of the new password.");
 			header('Location: /profile/change-password');
 			exit;
 
@@ -158,7 +153,7 @@
 
 		if($_POST['new_pass'] != $_POST['new_pass_confirm']) {
 
-			User::setError("Password confirmation and new password don't match.");
+			Message::setError("Password confirmation and new password don't match.");
 			header('Location: /profile/change-password');
 			exit;
 
@@ -168,17 +163,15 @@
 
 		if(!password_verify($_POST['current_pass'], $user->getdespassword())) {
 
-			User::setError("Your current password is incorrect. Try again.");
+			Message::setError("Your current password is incorrect. Try again.");
 			header('Location: /profile/change-password');
 			exit;
 
 		}
 
-		$user->setdespassord($_POST['new_pass']);
+		$user->setPassword($_POST['new_pass']);
 
-		$user->update();
-
-		User::setSuccess("Password changed successfully!");
+		Message::setSuccess("Password changed successfully!");
 
 		header('Location: /profile/change-password');
 		exit;

@@ -7,7 +7,7 @@
 	use \Hcode\Model\Order;
 
 	$app->get('/', function() {
-	    
+
 		$products = Product::listAll();
 
 	    $page = new Page();

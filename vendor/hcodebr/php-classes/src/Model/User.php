@@ -9,11 +9,9 @@
 	class User extends Model{
 
 		const SESSION = "User";
+		const SESSION_ADM = "User_ADM";
 		const SECRET = "HcodePhp7_Secret";
 		const SECRET_IV = "HcodePhp7_Secret_IV";
-		const ERROR = "UserError";
-		const ERROR_REGISTER = "UserErrorResgister";
-		const SUCCESS = "UserSuccess";
 
 		public static function getFromSession()
 		{
@@ -31,26 +29,48 @@
 
 		}
 
+		public function setToSession()
+		{
+
+			$_SESSION[User::SESSION] = $this->getData();
+
+		}
+
 		public static function checkLogin($inadmin = false)
 		{
 
 			if(
-				!isset($_SESSION[User::SESSION])
-				||
-				!$_SESSION[User::SESSION]
-				||
-				!(int)$_SESSION[User::SESSION]["iduser"]
-			)
+				isset($_SESSION[User::SESSION])
+				&&
+				$_SESSION[User::SESSION]
+			){
+
+				if(
+					(int)$_SESSION[User::SESSION]["iduser"]
+					&&
+					!$inadmin || (bool)$_SESSION[User::SESSION]['inadmin']
+				)
+
+					return true;
 
 				return false;
+			}
 			
-			elseif(!$inadmin || (bool)$_SESSION[User::SESSION]['inadmin'])
+			if(
+				isset($_SESSION[User::SESSION_ADM])
+				&&
+				$_SESSION[User::SESSION_ADM]
+			) {
 
-				return true;
-			
-			else
+				if((int)$_SESSION[User::SESSION_ADM]["iduser"] == 1)
+					
+					return true;
 
 				return false;
+
+			}
+
+			return false;
 
 		}
 
@@ -58,7 +78,7 @@
 		{
 
 			if(!User::checkLogin($inadmin)) {
-				
+
 				if($inadmin)
 					header("Location: /admin/login");
 				else
@@ -82,13 +102,17 @@
 				INNER JOIN tb_persons b
 					ON a.idperson = b.idperson
 				WHERE a.deslogin = :LOGIN
-				OR b.desemail = :LOGIN", array(
-				":LOGIN" => $login
-			));
+				OR b.desemail = :LOGIN",
+				[
+					":LOGIN" => $login
+				]
+			);
 
 			if (count($results) === 0)
 			{
-				throw new \Exception("1User unexistent or password invalid!");
+				
+				throw new \Exception("User unexistent or password invalid!");
+			
 			}
 
 			$data = $results[0];
@@ -101,19 +125,30 @@
 				$data['desperson'] = utf8_encode($data['desperson']);
 
 				$user->setData($data);
-			
-				$_SESSION[User::SESSION] = $user->getData();
+
+				$_SESSION[
+					$user->getinadmin()
+					?
+					User::SESSION_ADM : User::SESSION
+				] = $user->getData();
 
 			}else{
-				throw new \Exception("User unexistent or password invalid.");
+
+				throw new \Exception("User unexistent or password invalid!");
+			
 			}
 				
 		}
 
 		public static function logout()
 		{
+			if(isset($_SESSION[User::SESSION_ADM]))
 
-			$_SESSION[User::SESSION] = NULL;
+				$_SESSION[User::SESSION_ADM] = NULL;
+			
+			else
+				
+				$_SESSION[User::SESSION] = NULL;
 		
 		}
 
@@ -152,7 +187,7 @@
 				)",
 				array(
 					":desperson" => $this->getdesperson(),
-					":deslogin" => utf8_decode($this->getdeslogin()),
+					":deslogin" => $this->getdeslogin(),
 					":despassword" => User::getPasswordHash($this->getdespassword()),
 					":desemail" => $this->getdesemail(),
 					":nrphone" => $this->getnrphone(),
@@ -177,9 +212,9 @@
 				)",
 				array(
 					":iduser" => $this->getiduser(),
-					":desperson" => utf8_decode($this->getdesperson()),
+					":desperson" => $this->getdesperson(),
 					":deslogin" => $this->getdeslogin(),
-					":despassword" => User::getPasswordHash($this->getdespassword()),
+					":despassword" => $this->getdespassword(),
 					":desemail" => $this->getdesemail(),
 					":nrphone" => $this->getnrphone(),
 					":inadmin" => $this->getinadmin()
@@ -187,6 +222,9 @@
 			);
 
 			$this->setData($results[0]);
+
+			$this->setToSession();
+
 		}
 
 		public function delete()
@@ -327,84 +365,6 @@
 				":password" => User::getPasswordHash($password),
 				":iduser" => $this->getiduser()
 			));
-		}
-
-		public static function setSuccess($msg)
-		{
-
-			$_SESSION[User::SUCCESS] = $msg;
-
-		}
-
-		public static function getSuccess()
-		{
-
-			$msg = isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]
-					? $_SESSION[User::SUCCESS] : "";
-
-			User::clearSuccess();
-
-			return $msg;
-
-		}
-
-		public static function clearSuccess()
-		{
-
-			$_SESSION[User::SUCCESS] = NULL;
-
-		}
-
-		public static function setError($msg)
-		{
-
-			$_SESSION[User::ERROR] = $msg;
-
-		}
-
-		public static function getError()
-		{
-
-			$msg = isset($_SESSION[User::ERROR]) && $_SESSION[User::ERROR]
-					? $_SESSION[User::ERROR] : "";
-
-			User::clearError();
-
-			return $msg;
-
-		}
-
-		public static function clearError()
-		{
-
-			$_SESSION[User::ERROR] = NULL;
-
-		}
-
-		public static function setErrorRegister($msg)
-		{
-
-			$_SESSION[User::ERROR_REGISTER] = $msg;
-
-		}
-
-		public static function getErrorRegister()
-		{
-
-			$msg = isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]
-					? $_SESSION[User::ERROR_REGISTER] : "";
-
-			User::clearErrorRegister();
-
-			return $msg;
-
-		}
-
-		public static function clearErrorRegister()
-		{
-
-			$_SESSION[User::ERROR_REGISTER] = NULL;
-
 		}
 
 		public static function checkLoginExist($login)

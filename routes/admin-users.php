@@ -1,13 +1,14 @@
 <?php 
 
 	use \Hcode\Model\User;
+	use \Hcode\Message;
 	use \Hcode\Pagination;
 	use \Hcode\PageAdmin;
 
 	$app->get('/admin/users/:iduser/password', function($iduser) {
 
 		User::verifyLogin();
-		// /admin/users/{$value.iduser}/password
+		
 		$user = new User();
 
 		$user->get((int)$iduser);
@@ -16,8 +17,8 @@
 
 		$page->setTpl('users-password', [
 			'user' => $user->getData(),
-			'msgError' => User::getError(),
-			'msgSuccess' => User::getSuccess()
+			'msgError' => Message::getError(),
+			'msgSuccess' => Message::getSuccess()
 		]);
 
 	});
@@ -28,25 +29,25 @@
 
 		if(!(isset($_POST['despassword']) && $_POST['despassword'])) {
 
-			User::setError("Fill the new password.");
+			Message::setError("Fill the new password.");
 			header('Location: /admin/users/'.$iduser.'/password');
-			exit();
+			exit;
 
 		}
 
 		if(!(isset($_POST['despassword-confirm']) && $_POST['despassword-confirm'])) {
 
-			User::setError("Fill the new password confirmation.");
+			Message::setError("Fill the new password confirmation.");
 			header('Location: /admin/users/'.$iduser.'/password');
-			exit();
+			exit;
 
 		}
 
 		if($_POST['despassword'] !== $_POST['despassword-confirm']) {
 
-			User::setError("Passwords don't match.");
+			Message::setError("Passwords don't match.");
 			header('Location: /admin/users/'.$iduser.'/password');
-			exit();
+			exit;
 
 		}
 
@@ -56,10 +57,10 @@
 
 		$user->setPassword($_POST['despassword']);
 
-		User::setSuccess("Password changed successfully.");
+		Message::setSuccess("Password changed successfully.");
 
 		header('Location: /admin/users/'.$iduser.'/password');
-		exit();
+		exit;
 
 	});
 
@@ -106,8 +107,97 @@
 
 		$page = new PageAdmin();
 
-	    $page->setTpl("users-create");
+	    $page->setTpl("users-create", [
+	    	'errorRegister' => Message::getErrorRegister(),
+	    	"registerDataAdm" => isset($_SESSION['registerDataAdm'])
+	    						?
+								$_SESSION['registerDataAdm'] :
+								[
+									'desperson'=> '',
+									'deslogin'=> '',
+									'desemail'=> '',
+									'nrphone' => '',
+									'inadmin' => 0
+								]
+	    ]);
 	
+	});
+
+	$app->post('/admin/users/create', function() {
+
+		User::verifyLogin();
+
+		$_SESSION['registerDataAdm'] = $_POST;
+		$_SESSION['registerDataAdm']['inadmin'] = isset($_POST['inadmin']) ? 1 : 0;
+
+		if(!(isset($_POST['desperson']) && $_POST['desperson'])) {
+
+			Message::setErrorRegister("Fill in your name.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		if(!(isset($_POST['deslogin']) && $_POST['deslogin'])) {
+
+			Message::setErrorRegister("Fill in your login.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		if(!(isset($_POST['desemail']) && $_POST['desemail'])) {
+
+			Message::setErrorRegister("Fill in your email.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		if (User::checkLoginExist($_POST['desemail'])) {
+			
+			Message::setErrorRegister("This email is already in use. Enter another.");
+			header('Location: /admin/users/create');
+			exit;
+			
+		}
+
+		if(!(isset($_POST['despassword']) && $_POST['despassword'])) {
+
+			Message::setErrorRegister("Fill in your password.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+		
+		$user = new User();
+
+		$user->setData([
+			'inadmin' => $_POST['inadmin'],
+			'deslogin' => $_POST['deslogin'],
+			'nrphone' => $_POST['nrphone'],
+			'desperson' => $_POST['desperson'],
+			'desemail' => $_POST['desemail'],
+			'despassword' => $_POST['despassword']
+		]);
+		
+		$user->save();
+
+		header("Location: /admin/users");
+
+		$_SESSION['registerDataAdm'] = [
+			'inadmin' => 0,
+			'deslogin' => '',
+			'desperson' => '',
+			'desemail' => '',
+			'despassword' => '',
+			'nrphone' => ''
+		];
+
+		exit;
+
 	});
 
 	$app->get('/admin/users/:iduser/delete', function($iduser) {
@@ -141,26 +231,49 @@
 	
 	});
 
-	$app->post('/admin/users/create', function() {
-
-		User::verifyLogin();
-
-		$user = new User();
-
-		$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
-
-		$user->setData($_POST);
-		
-		$user->save();
-
-		header("Location: /admin/users");
-		exit;
-
-	});
-
 	$app->post('/admin/users/:iduser', function($iduser) {
 
 		User::verifyLogin();
+
+		if(!(isset($_POST['desperson']) && $_POST['desperson'])) {
+
+			Message::setErrorRegister("Fill in your name.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		if(!(isset($_POST['deslogin']) && $_POST['deslogin'])) {
+
+			Message::setErrorRegister("Fill in your login.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		if(!(isset($_POST['desemail']) && $_POST['desemail'])) {
+
+			Message::setErrorRegister("Fill in your email.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
+
+		if (User::checkLoginExist($_POST['desemail'])) {
+			
+			Message::setErrorRegister("This email is already in use. Enter another.");
+			header('Location: /admin/users/create');
+			exit;
+			
+		}
+
+		if(!(isset($_POST['despassword']) && $_POST['despassword'])) {
+
+			Message::setErrorRegister("Fill in your password.");
+			header('Location: /admin/users/create');
+			exit;
+
+		}
 
 		$user = new User();
 

@@ -2,16 +2,6 @@
 	
 	use \Hcode\Model\User;
 	use \Hcode\PageAdmin;
-	
-	$app->get('/admin', function() {
-	    
-	    User::verifyLogin();
-
-	    $page = new PageAdmin();
-
-	    $page->setTpl("index");
-
-	});
 
 	$app->get('/admin/login', function() {
 	    
@@ -30,6 +20,16 @@
 
 		header("Location: /admin");
 		exit;
+	});
+
+	$app->get('/admin', function() {
+	    
+	    User::verifyLogin();
+
+	    $page = new PageAdmin();
+
+	    $page->setTpl("index");
+
 	});
 
 	$app->get('/admin/logout', function() {

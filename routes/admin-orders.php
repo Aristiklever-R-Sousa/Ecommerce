@@ -2,6 +2,7 @@
 
 	use \Hcode\PageAdmin;
 	use \Hcode\Pagination;
+	use \Hcode\Message;
 	use \Hcode\Model\User;
 	use \Hcode\Model\Order;
 	use \Hcode\Model\OrderStatus;
@@ -19,8 +20,8 @@
 		$page->setTpl('order-status', [
 			'order' => $order->getData(),
 			'status' => OrderStatus::listAll(),
-			'msgSuccess' => Order::getSuccess(),
-			'msgError' => Order::getError()
+			'msgSuccess' => Message::getSuccess('Order'),
+			'msgError' => Message::getError('Order')
 		]);
 
 	});
@@ -31,7 +32,7 @@
 
 		if(!(isset($_POST['idstatus']) && $_POST['idstatus'])) {
 
-			Order::setError("Enter the current status.");
+			Message::setError("Enter the current status.", 'Order');
 			header('Location: /admin/orders/'.$idorder.'/status');
 			exit;
 
@@ -45,7 +46,7 @@
 
 		$order->save();
 
-		Order::setSuccess("Status updated.");
+		Message::setSuccess("Status updated.", 'Order');
 		header('Location: /admin/orders/'.$idorder.'/status');
 		exit;
 

@@ -1,19 +1,14 @@
 <?php
 	
-	namespace \Hcode;
+	namespace Hcode;
 
 	class Message {
-
-		const SESSION = [
-			'User' => "User",
-			'Cart' => "Cart"
-		];
 
 		const ERROR = [
 			'User' => "UserError",
 			'Cart' => "CartError",
 			'Address' => "AddressError",
-			"Order" => "Order-Error"
+			'Order' => "Order-Error"
 		];
 
 		const ERROR_REGISTER = [
@@ -24,6 +19,32 @@
 			'User' => "UserSuccess",
 			'Order' => "Order-Success"
 		];
+
+		public static function setError($msg, $actor = 'User')
+		{
+
+			$_SESSION[Message::ERROR[$actor]] = $msg;
+
+		}
+
+		public static function getError($actor = 'User')
+		{
+
+			$msg = isset($_SESSION[Message::ERROR[$actor]]) && $_SESSION[Message::ERROR[$actor]]
+					? $_SESSION[Message::ERROR[$actor]] : "";
+
+			Message::clearError($actor);
+
+			return $msg;
+
+		}
+
+		public static function clearError($actor = 'User')
+		{
+
+			$_SESSION[Message::ERROR[$actor]] = NULL;
+
+		}
 
 		public static function setSuccess($msg, $actor = 'User')
 		{
@@ -54,40 +75,14 @@
 
 		}
 
-		public static function setError($msg, $actor = 'User')
-		{
-
-			$_SESSION[Message::ERROR[$actor]] = $msg;
-
-		}
-
-		public static function getError($actor = 'User')
-		{
-
-			$msg = isset($_SESSION[Message::ERROR[$actor]]) && $_SESSION[Message::ERROR[$actor]]
-					? $_SESSION[Message::ERROR[$actor]] : "";
-
-			Message::clearError($actor);
-
-			return $msg;
-
-		}
-
-		public static function clearError($actor = 'User')
-		{
-
-			$_SESSION[Message::ERROR[$actor]] = NULL;
-
-		}
-
-		public static function setErrorRegister($msg)
+		public static function setErrorRegister($msg, $actor = 'User')
 		{
 
 			$_SESSION[Message::ERROR_REGISTER[$actor]] = $msg;
 
 		}
 
-		public static function getErrorRegister()
+		public static function getErrorRegister($actor = 'User')
 		{
 
 			$msg = isset($_SESSION[Message::ERROR_REGISTER[$actor]])
@@ -101,7 +96,7 @@
 
 		}
 
-		public static function clearErrorRegister()
+		public static function clearErrorRegister($actor = 'User')
 		{
 
 			$_SESSION[Message::ERROR_REGISTER[$actor]] = NULL;

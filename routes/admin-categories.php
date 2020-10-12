@@ -153,8 +153,6 @@
 
 	});
 
-	header('Location: /admin/categories');
-
 	$app->get("/admin/categories/:idcategory/products/:idproduct/remove", function($idcategory, $idproduct) {
 
 		User::verifyLogin();

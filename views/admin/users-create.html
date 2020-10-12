@@ -17,6 +17,13 @@
 
   <div class="row">
   	<div class="col-md-12">
+
+      {if="$errorRegister != ''"}
+        <div class="alert alert-danger">
+          {$errorRegister}
+        </div>
+      {/if}
+
   		<div class="box box-success">
         <div class="box-header with-border">
           <h3 class="box-title">Novo Usuário</h3>
@@ -27,19 +34,19 @@
           <div class="box-body">
             <div class="form-group">
               <label for="desperson">Nome</label>
-              <input type="text" class="form-control" id="desperson" name="desperson" placeholder="Digite o nome">
+              <input type="text" class="form-control" id="desperson" name="desperson" value="{$registerDataAdm.desperson}" placeholder="Digite o nome">
             </div>
             <div class="form-group">
               <label for="deslogin">Login</label>
-              <input type="text" class="form-control" id="deslogin" name="deslogin" placeholder="Digite o login">
+              <input type="text" class="form-control" id="deslogin" name="deslogin" value="{$registerDataAdm.deslogin}" placeholder="Digite o login">
             </div>
             <div class="form-group">
               <label for="nrphone">Telefone</label>
-              <input type="tel" class="form-control" id="nrphone" name="nrphone" placeholder="Digite o telefone">
+              <input type="tel" class="form-control" id="nrphone" name="nrphone" value="{$registerDataAdm.nrphone}" placeholder="Digite o telefone">
             </div>
             <div class="form-group">
               <label for="desemail">E-mail</label>
-              <input type="email" class="form-control" id="desemail" name="desemail" placeholder="Digite o e-mail">
+              <input type="email" class="form-control" id="desemail" name="desemail" value="{$registerDataAdm.desemail}" placeholder="Digite o e-mail">
             </div>
             <div class="form-group">
               <label for="despassword">Senha</label>
@@ -47,7 +54,7 @@
             </div>
             <div class="checkbox">
               <label>
-                <input type="checkbox" name="inadmin" value="1"> Acesso de Administrador
+                  <input {if="$registerDataAdm.inadmin == 1"} checked {/if} type="checkbox" name="inadmin" value="1"> Acesso de Administrador
               </label>
             </div>
           </div>

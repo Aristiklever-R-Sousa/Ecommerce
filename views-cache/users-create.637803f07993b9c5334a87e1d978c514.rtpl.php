@@ -17,6 +17,13 @@
 
   <div class="row">
   	<div class="col-md-12">
+
+      <?php if( $errorRegister != '' ){ ?>
+        <div class="alert alert-danger">
+          <?php echo htmlspecialchars( $errorRegister, ENT_COMPAT, 'UTF-8', FALSE ); ?>
+        </div>
+      <?php } ?>
+
   		<div class="box box-success">
         <div class="box-header with-border">
           <h3 class="box-title">Novo Usuário</h3>
@@ -27,19 +34,19 @@
           <div class="box-body">
             <div class="form-group">
               <label for="desperson">Nome</label>
-              <input type="text" class="form-control" id="desperson" name="desperson" placeholder="Digite o nome">
+              <input type="text" class="form-control" id="desperson" name="desperson" value="<?php echo htmlspecialchars( $registerDataAdm["desperson"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Digite o nome">
             </div>
             <div class="form-group">
               <label for="deslogin">Login</label>
-              <input type="text" class="form-control" id="deslogin" name="deslogin" placeholder="Digite o login">
+              <input type="text" class="form-control" id="deslogin" name="deslogin" value="<?php echo htmlspecialchars( $registerDataAdm["deslogin"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Digite o login">
             </div>
             <div class="form-group">
               <label for="nrphone">Telefone</label>
-              <input type="tel" class="form-control" id="nrphone" name="nrphone" placeholder="Digite o telefone">
+              <input type="tel" class="form-control" id="nrphone" name="nrphone" value="<?php echo htmlspecialchars( $registerDataAdm["nrphone"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Digite o telefone">
             </div>
             <div class="form-group">
               <label for="desemail">E-mail</label>
-              <input type="email" class="form-control" id="desemail" name="desemail" placeholder="Digite o e-mail">
+              <input type="email" class="form-control" id="desemail" name="desemail" value="<?php echo htmlspecialchars( $registerDataAdm["desemail"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Digite o e-mail">
             </div>
             <div class="form-group">
               <label for="despassword">Senha</label>
@@ -47,7 +54,7 @@
             </div>
             <div class="checkbox">
               <label>
-                <input type="checkbox" name="inadmin" value="1"> Acesso de Administrador
+                  <input <?php if( $registerDataAdm["inadmin"] == 1 ){ ?> checked <?php } ?> type="checkbox" name="inadmin" value="1"> Acesso de Administrador
               </label>
             </div>
           </div>
